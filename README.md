@@ -1,1 +1,1 @@
-This code provide a countdown time using javascript, css and html.
+This code provides a countdown time using javascript, css and html.
