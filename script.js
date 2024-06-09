@@ -1,4 +1,10 @@
-const countToDate = new Date().setMinutes(new Date().getMinutes() + 1);
+const meetingMsg = sessionStorage.getItem('selectedTitle');
+
+// Update the content of the <p> element
+document.getElementById('title_msg').textContent = meetingMsg;
+
+const timervalue = parseInt(sessionStorage.getItem("countdownTimer"));
+const countToDate = new Date().setMinutes(new Date().getMinutes() + timervalue);
 
 let previousTimeBetweenDates;
 const intervalId = setInterval(() => {
