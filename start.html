@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Page</title>
+    <link rel="stylesheet" href="start_styles.css">
+</head>
+<body>
+    <h1>Probus Countdown Timer Configuration Page</h1>
+
+        <table id="timerTitles">
+            <tr>
+                <th>Title 1: </th>
+                <th id="Title1">Meeting starts in</th>
+            </tr>
+            <tr>
+                <th>Title 2: </th>
+                <th id="Title2">Meeting resumes in</th>
+            </tr>
+        </table>
+        <label for="titleSelect">Select Title:</label>
+        <select id="titleSelect">
+            <option value="Title1">Title 1</option>
+            <option value="Title2">Title 2</option>
+        </select>
+
+        <br><br><br><br>
+
+        <label for="countdownInput">Enter Countdown Timer (in minutes):</label>
+        <input type="number" id="countdownInput" min="1" step="1" required>
+
+        <br><br>
+
+        <button onclick="saveData()">Begin Countdown Timer</button>
+    
+
+    <script>
+        function saveData() {
+            var selectedTitle = document.getElementById("titleSelect").value;
+            var countdownTimer = document.getElementById("countdownInput").value;
+            if (selectedTitle === "Title1"){
+                Title = "Meeting begins in"
+            } else {
+                Title = "Meeting resumes in"
+            }
+            sessionStorage.setItem("selectedTitle", Title);
+            sessionStorage.setItem("countdownTimer", countdownTimer);
+            window.location.href = "index.html"; // Redirect to appropriate page
+        }
+    </script>
+</body>
+</html>
