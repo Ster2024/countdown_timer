@@ -37,12 +37,15 @@
 
     <script>
         function saveData() {
-            var selectedTitle = document.getElementById("titleSelect").value;
-            var countdownTimer = document.getElementById("countdownInput").value;
+            const selectedTitle = document.getElementById("titleSelect").value;
+            const countdownTimer = document.getElementById("countdownInput").value;
+            console.log('values', selectedTitle, countdownTimer)
             if (selectedTitle === "Title1"){
                 Title = "Meeting begins in"
-            } else {
+            } else if (selectedTitle === "Title2") {
                 Title = "Meeting resumes in"
+            } else {
+                Title = ""
             }
             sessionStorage.setItem("selectedTitle", Title);
             sessionStorage.setItem("countdownTimer", countdownTimer);
