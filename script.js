@@ -3,7 +3,10 @@ const meetingMsg = sessionStorage.getItem('selectedTitle');
 // Update the content of the <p> element
 document.getElementById('title_msg').textContent = meetingMsg;
 
-const timervalue = parseInt(sessionStorage.getItem("countdownTimer"));
+let timervalue = parseInt(sessionStorage.getItem("countdownTimer"));
+if (Number.isNaN(timervalue)){
+  timervalue = 1
+}
 const countToDate = new Date().setMinutes(new Date().getMinutes() + timervalue);
 
 let previousTimeBetweenDates;
@@ -12,6 +15,7 @@ const intervalId = setInterval(() => {
   const timeBetweenDates = Math.ceil((countToDate - currentDate) / 1000);
   if (timeBetweenDates < 0) {
     clearInterval(intervalId);
+    window.location.href = "end.html";
     return;
   }
   flipAllCards(timeBetweenDates);
