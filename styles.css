@@ -1,8 +1,21 @@
 :root {
   --bg-color: #000;
   --text-color: #f2f2f2;
-  --card-top-bg: #0000e6;
-  --card-bottom-bg: blue;
+
+  /* Professional Color Palettes - 10% Lightness difference for depth */
+  --blue-top: hsl(240, 100%, 45%);
+  --blue-bottom: hsl(240, 100%, 35%);
+
+  --amber-top: hsl(45, 100%, 50%);
+  --amber-bottom: hsl(45, 100%, 40%);
+
+  --red-top: hsl(0, 100%, 50%);
+  --red-bottom: hsl(0, 100%, 40%);
+
+  /* Default Card Colors */
+  --card-top-bg: var(--blue-top);
+  --card-bottom-bg: var(--blue-bottom);
+
   --flip-duration: 250ms;
   --font-size-timer: clamp(2rem, 22vw, 100rem);
   --font-size-title: clamp(1rem, 5vw, 4rem);
@@ -186,22 +199,22 @@ button:hover {
 
 .flip-card.warning .top,
 .flip-card.warning .top-flip {
-  background-color: #ffbf00; /* Amber */
+  background-color: var(--amber-top);
 }
 
 .flip-card.warning .bottom,
 .flip-card.warning .bottom-flip {
-  background-color: #cc9900;
+  background-color: var(--amber-bottom);
 }
 
 .flip-card.critical .top,
 .flip-card.critical .top-flip {
-  background-color: #ff4d4d; /* Red */
+  background-color: var(--red-top);
 }
 
 .flip-card.critical .bottom,
 .flip-card.critical .bottom-flip {
-  background-color: #cc0000;
+  background-color: var(--red-bottom);
 }
 
 .colon {
@@ -246,7 +259,7 @@ button:hover {
 }
 
 .red-text {
-  color: #ff4d4d;
+  color: var(--red-top);
   font-weight: bold;
   margin-top: 1rem;
 }
