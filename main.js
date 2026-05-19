@@ -66,24 +66,22 @@ function updateTimerDisplay(time, initialMinutes) {
   
   const allCards = document.querySelectorAll(".flip-card");
   
-  // Color logic
-  if (initialMinutes >= 5) {
-    if (time <= 60) {
-      allCards.forEach(card => {
-        card.classList.remove("warning");
-        card.classList.add("critical");
-      });
-    } else if (time <= 120) {
-      allCards.forEach(card => {
-        card.classList.add("warning");
-        card.classList.remove("critical");
-      });
-    } else {
-      allCards.forEach(card => {
-        card.classList.remove("warning");
-        card.classList.remove("critical");
-      });
-    }
+  // Color logic - always apply fixed thresholds (amber warning at 2min, red critical at 1min)
+  if (time <= 60) {
+    allCards.forEach(card => {
+      card.classList.remove("warning");
+      card.classList.add("critical");
+    });
+  } else if (time <= 120) {
+    allCards.forEach(card => {
+      card.classList.add("warning");
+      card.classList.remove("critical");
+    });
+  } else {
+    allCards.forEach(card => {
+      card.classList.remove("warning");
+      card.classList.remove("critical");
+    });
   }
 
   // Update each digit using the optimized flip logic
