@@ -32,7 +32,7 @@
       <label for="countdownInput">Enter Countdown Timer (in minutes):</label>
       <input type="number" id="countdownInput" min="1" step="1" required>
     </div>
-    <button onclick="startTimer()">Begin Countdown Timer</button>
+    <button id="beginButton">Begin Countdown Timer</button>
   </section>
 
   <!-- Timer View -->
@@ -90,7 +90,7 @@
       <audio id="finish-audio">
         <source src="sitplease.mp3" type="audio/mpeg">
       </audio>
-      <button onclick="playAudio()">Play Audio</button>
+      <button id="playAudioButton">Play Audio</button>
     </div>
   </section>
 </body>

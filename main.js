@@ -1,4 +1,5 @@
-let timerInterval;
+(function(){ 'use strict';
+  let timerId = null;
 
 function switchView(viewId) {
   document.querySelectorAll('.view').forEach(view => {
@@ -31,18 +32,32 @@ function startTimer() {
 
   switchView('timer-view');
 
-  timerInterval = setInterval(() => {
-    const currentDate = new Date().getTime();
-    const timeBetweenDates = Math.ceil((countToDate - currentDate) / 1000);
+  // Improved timing: align updates to 250ms ticks using Date.now() and setTimeout to reduce drift
+  if (timerId) {
+    clearTimeout(timerId);
+    timerId = null;
+  }
 
-    if (timeBetweenDates <= 0) {
-      clearInterval(timerInterval);
+  const tick = () => {
+    const remainingMs = Math.max(0, countToDate - Date.now());
+    const secondsRemaining = Math.max(0, Math.ceil(remainingMs / 1000));
+
+    if (secondsRemaining <= 0) {
+      updateTimerDisplay(0, initialMinutes);
+      timerId = null;
       finishTimer();
       return;
     }
 
-    updateTimerDisplay(timeBetweenDates, initialMinutes);
-  }, 250);
+    updateTimerDisplay(secondsRemaining, initialMinutes);
+
+    // Schedule next update aligned to the 250ms tick boundary
+    const delay = 250 - (Date.now() % 250) || 250;
+    timerId = setTimeout(tick, delay);
+  };
+
+  // Start the tick loop immediately
+  tick();
 }
 
 function updateTimerDisplay(time, initialMinutes) {
@@ -79,26 +94,51 @@ function updateTimerDisplay(time, initialMinutes) {
 }
 
 function flip(flipCard, newNumber) {
+  // Guard against missing elements
+  if (!flipCard) return;
   const topHalf = flipCard.querySelector(".top");
   const bottomHalf = flipCard.querySelector(".bottom");
   const topFlip = flipCard.querySelector(".top-flip");
   const bottomFlip = flipCard.querySelector(".bottom-flip");
+  if (!topHalf || !bottomHalf || !topFlip || !bottomFlip) return;
   
-  const startNumber = parseInt(topHalf.textContent);
+  const startNumber = parseInt(topHalf.textContent, 10) || 0;
   if (newNumber === startNumber) return;
 
+  // If a flip is already in progress on this card, short-circuit to a safe final state
+  if (flipCard.classList.contains('flipping')) {
+    topHalf.textContent = String(newNumber);
+    bottomHalf.textContent = String(newNumber);
+    topFlip.textContent = String(newNumber);
+    bottomFlip.textContent = String(newNumber);
+    flipCard.classList.remove('flipping');
+    return;
+  }
+
   // Set numbers for animation
-  topFlip.textContent = startNumber;
-  bottomFlip.textContent = newNumber;
+  topFlip.textContent = String(startNumber);
+  bottomFlip.textContent = String(newNumber);
 
   // Trigger animation
   flipCard.classList.add("flipping");
-  
-  topFlip.onanimationend = () => {
-    topHalf.textContent = newNumber;
+
+  const onTopFlipEnd = (e) => {
+    if (e.target !== topFlip) return;
+    topHalf.textContent = String(newNumber);
+    bottomHalf.textContent = String(newNumber);
     flipCard.classList.remove("flipping");
-    bottomHalf.textContent = newNumber;
+    topFlip.removeEventListener("animationend", onTopFlipEnd);
   };
+
+  // Use once option where supported and also remove in handler for compatibility
+  if (typeof topFlip.addEventListener === 'function') {
+    try {
+      topFlip.addEventListener("animationend", onTopFlipEnd, { once: true });
+    } catch (e) {
+      // older browsers may not support options object
+      topFlip.addEventListener("animationend", onTopFlipEnd);
+    }
+  }
 }
 
 function finishTimer() {
@@ -112,7 +152,7 @@ function playAudio() {
 }
 
 function resetApp() {
-  clearInterval(timerInterval);
+  if (timerId) { clearTimeout(timerId); timerId = null; }
   const audio = document.getElementById('finish-audio');
   audio.pause();
   audio.currentTime = 0;
@@ -125,3 +165,14 @@ function resetApp() {
   
   switchView('setup-view');
 }
+
+// Bind UI events after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  const beginBtn = document.getElementById('beginButton');
+  if (beginBtn) beginBtn.addEventListener('click', startTimer);
+  const playBtn = document.getElementById('playAudioButton');
+  if (playBtn) playBtn.addEventListener('click', playAudio);
+});
+
+})(); // end module wrapper
+
